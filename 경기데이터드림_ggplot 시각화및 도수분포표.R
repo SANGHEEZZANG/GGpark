@@ -1,6 +1,21 @@
-
 df_test <- read.csv("ggpark2.csv",fileEncoding = "euc-kr") # pandas에서 내보냈던 데이터셋
 df_test
+
+# ggplot 테마 생성
+mytheme <-theme(plot.title=element_text(face="bold.italic",
+                                        size=14,
+                                        color="brown")) + # 그래프의 테마 변경
+  theme(axis.title=element_text(face="bold.italic",
+                                size=10,
+                                color="tomato")) +
+  theme(axis.text=element_text(face="bold",
+                               size=9,
+                               color="royalblue"),
+        panel.background = element_rect(fill="snow",color="darkblue"),
+        panel.grid.major.y = element_line(color="gray",linetype="solid"),
+        panel.grid.minor.y = element_line(color="gray",linetype="dashed"),
+        legend.position = "inside")
+
 
 # dplyr로 남부_북부 그룹화
 df_test %>%
@@ -65,18 +80,24 @@ p4 <- df_5 %>%
 library(gridExtra)
 grid.arrange(p1,p3,p2,p4,nrow=2, ncol=2)
 
+df_4
+df_5
 
-# ggplot 테마 생성
-mytheme <-theme(plot.title=element_text(face="bold.italic",
-                                        size=14,
-                                        color="brown")) + # 그래프의 테마 변경
-  theme(axis.title=element_text(face="bold.italic",
-                                size=10,
-                                color="tomato")) +
-  theme(axis.text=element_text(face="bold",
-                               size=9,
-                               color="royalblue"),
-        panel.background = element_rect(fill="snow",color="darkblue"),
-        panel.grid.major.y = element_line(color="gray",linetype="solid"),
-        panel.grid.minor.y = element_line(color="gray",linetype="dashed"),
-        legend.position = "inside")
+# 파이차트 작업중..
+df_6 <- df_5 %>%
+  group_by(city) %>%
+  mutate(pct = (total)/sum(df_5$total)*100)
+
+df_6['pct']
+df_6
+
+head(df_6)
+str(df_6)
+
+
+p5 <- ggplot(df_6, aes(x = 시군별, y = pct)) +
+      geom_bar(stat = "identity", width = 1) +
+      coord_polar(theta = "y") +
+      theme_void()
+
+print(p5)
