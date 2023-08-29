@@ -13,7 +13,7 @@ df_test %>%
   )
 
 
-# 시군별로 주차장수 종류별 주차장 수와 그의 합계 total 변수 생성성
+# 시군별로 주차장수 종류별 주차장 수와 그의 합계 total 변수 생성
 df_4<- df_test %>%
   group_by(시군별) %>%
   select(X2021_노상.유료.,X2021_노상.무료.,X2021_노외.공영.,X2021_노외.민영.) %>%
@@ -66,3 +66,17 @@ library(gridExtra)
 grid.arrange(p1,p3,p2,p4,nrow=2, ncol=2)
 
 
+# ggplot 테마 생성
+mytheme <-theme(plot.title=element_text(face="bold.italic",
+                                        size=14,
+                                        color="brown")) + # 그래프의 테마 변경
+  theme(axis.title=element_text(face="bold.italic",
+                                size=10,
+                                color="tomato")) +
+  theme(axis.text=element_text(face="bold",
+                               size=9,
+                               color="royalblue"),
+        panel.background = element_rect(fill="snow",color="darkblue"),
+        panel.grid.major.y = element_line(color="gray",linetype="solid"),
+        panel.grid.minor.y = element_line(color="gray",linetype="dashed"),
+        legend.position = "inside")
