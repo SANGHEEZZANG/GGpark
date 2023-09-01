@@ -338,7 +338,7 @@ p4 <- df_6 %>%
   mytheme
 ```
 
-## 4분할 화면으로 위의 4개 그래프 출력
+## 2분할 화면으로 위의 4개 그래프 출력
 
 ``` r
 library(gridExtra)
@@ -353,10 +353,15 @@ library(gridExtra)
 
 ``` r
 grid.arrange(p1,p2,nrow=1, ncol=2)
-grid.arrange(p3,p4,nrow=1, ncol=2)
 ```
 
 ![](경기도주차장수md_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+grid.arrange(p3,p4,nrow=1, ncol=2)
+```
+
+![](경기도주차장수md_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ## 비율 그래프 -\> 유료 주차장이 더 많을때 빨간 그래포가 같이 표시됨
 

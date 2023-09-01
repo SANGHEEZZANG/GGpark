@@ -1,0 +1,140 @@
+---
+title: "경기도 주차장수"
+output:
+  github_document: default
+date: "2023-09-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 패키지 불러오기기
+
+```{r}
+library(dplyr)
+library(ggplot2)
+df_test <- read.csv("ggpark2.csv",fileEncoding = "euc-kr") # pandas에서 내보냈던 데이터셋
+df_test
+```
+
+## 테마생성
+```{r}
+# ggplot 테마 생성
+mytheme <-theme(plot.title=element_text(face="bold.italic",
+                                        size=14,
+                                        color="brown")) + # 그래프의 테마 변경
+  theme(axis.title=element_text(face="bold.italic",
+                                size=10,
+                                color="tomato")) +
+  theme(axis.text=element_text(face="bold",
+                               size=9,
+                               color="royalblue"),
+        panel.background = element_rect(fill="snow",color="darkblue"),
+        panel.grid.major.y = element_line(color="gray",linetype="solid"),
+        panel.grid.minor.y = element_line(color="gray",linetype="dashed"),
+        legend.position = "inside")
+
+```
+
+## 전처리 와 알맞는 변수 생성성
+```{r}
+# 시군별로 주차장수 종류별 주차장 수와 그의 합계 total 변수 생성
+df_4<- df_test %>%
+  group_by(시군별) %>%
+  select(X2021_노상.유료.,X2021_노상.무료.,X2021_노외.공영.,X2021_노외.민영.) %>%
+  mutate(total = X2021_노상.유료.+ X2021_노상.무료.+X2021_노외.공영.+X2021_노외.민영.)
+
+df_4
+
+# 무료주차장,유료주차장 변수 생성과, 시군별 factor로 변경, 비율변수 생성
+df_5 <- df_4 %>%
+  mutate(pay = X2021_노상.유료.+ X2021_노외.민영.) %>%
+  mutate(free = X2021_노상.무료.+ X2021_노외.공영.) %>%
+  mutate(city=as.factor(시군별)) %>%
+  mutate(rate_free=(free/(total)*100)) %>%
+  mutate(rate_pay=(pay/(total)*100)) %>%
+  arrange(city) %>%
+  select(free,rate_free,pay,rate_pay,total,city)
+
+df_5
+head(df_5)
+
+# 남부_북부로 그룹화와 필요한 변수만 select
+df_6 <- df_test %>%
+  group_by(남부_북부) %>%
+  mutate(pay = X2021_노상.유료.+ X2021_노외.민영.) %>%
+  mutate(free = X2021_노상.무료.+ X2021_노외.공영.) %>%
+  select(pay,free,시군별)
+
+df_6
+
+value <- rev(as.numeric(rownames(df_5['city']))) # 가평군이 맨위에 출력되게
+value
+
+```
+
+## p1 경기도 시군별 무료주차장 수 막대 그래프
+```{r}
+p1 <- df_5 %>%
+  ggplot(aes(x=reorder(city,value),y=free)) +
+  geom_col(fill="hotpink") +
+  geom_text(aes(label = free), hjust = 0, nudge_y=1) +
+  coord_flip() +
+  labs(x = "경기도 시군별", y = "무료주차장수수")+
+  mytheme
+
+```
+
+## p2 경기도 시군별 유료 주차장 수 막대 그래프
+```{r}
+p2 <- df_5 %>%
+  ggplot(aes(x=reorder(city,value),y=pay)) +
+  geom_col(fill="chocolate") +
+  coord_flip() +
+  geom_text(aes(label = pay), hjust = 0, nudge_y=1) +
+  labs(x = "경기도 시군별", y = "유료주차장수") +
+  mytheme
+
+```
+
+## p3 경기도 무료 주차장 남부/북부 수의 분포
+```{r}
+p3 <- df_6 %>%
+  ggplot(aes(x=남부_북부,y=free)) +
+  geom_boxplot(fill="aliceblue") +
+  labs(x = "경기도 남부/북부 ", y = "무료주차장수") +
+  mytheme
+
+```
+
+## p4 경기도 유료 주차장 남부/북부 수의 분포
+```{r}
+p4 <- df_6 %>%
+  ggplot(aes(x=남부_북부,y=pay)) +
+  geom_boxplot(fill="coral4") +
+  labs(x = "경기도 남부/북부 ", y = "유료주차장 수") +
+  mytheme
+
+```
+
+## 2분할 화면으로 위의 4개 그래프 출력
+```{r}
+library(gridExtra)
+grid.arrange(p1,p2,nrow=1, ncol=2)
+grid.arrange(p3,p4,nrow=1, ncol=2)
+
+```
+
+## 비율 그래프 -> 유료 주차장이 더 많을때 빨간 그래포가 같이 표시됨
+```{r}
+p5 <- ggplot(df_5, aes(x=reorder(city,value))) +
+  geom_col(aes(y=rate_pay,fill="rate_pay"))+
+  geom_col(aes(y=rate_free,fill="rate_free"))+
+  coord_flip() +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = c("lightblue", "lightcoral"))
+
+p5
+
+```
