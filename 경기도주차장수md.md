@@ -338,7 +338,7 @@ p4 <- df_6 %>%
   mytheme
 ```
 
-## 4분할 화면으로 위의 4개 그래프 출력력
+## 4분할 화면으로 위의 4개 그래프 출력
 
 ``` r
 library(gridExtra)
@@ -352,7 +352,8 @@ library(gridExtra)
     ##     combine
 
 ``` r
-grid.arrange(p1,p2,p3,p4,nrow=2, ncol=2)
+grid.arrange(p1,p2,nrow=1, ncol=2)
+grid.arrange(p3,p4,nrow=1, ncol=2)
 ```
 
 ![](경기도주차장수md_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
