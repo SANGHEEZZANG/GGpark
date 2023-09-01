@@ -28,13 +28,17 @@ df_4<- df_test %>%
 df_4
 
 df_5 <- df_4 %>%
-  group_by(시군별) %>%
   mutate(pay = X2021_노상.유료.+ X2021_노외.민영.) %>%
   mutate(free = X2021_노상.무료.+ X2021_노외.공영.) %>%
   mutate(city=as.factor(시군별)) %>%
-  arrange(city)
+  mutate(rate_free=(free/(total)*100)) %>%
+  mutate(rate_pay=(pay/(total)*100)) %>%
+  arrange(city) %>%
+  select(free,rate_free,pay,rate_pay,total,city)
 
 df_5
+head(df_5)
+
 
 df_6 <- df_test %>%
   group_by(남부_북부) %>%
@@ -85,3 +89,12 @@ p4 <- df_6 %>%
 library(gridExtra)
 grid.arrange(p1,p2,p3,p4,nrow=2, ncol=2)
 
+# 비율 그래프, 유료 주차장이 더 많을때 빨간 그래포가 같이 표시됨
+p5 <- ggplot(df_5, aes(x=reorder(city,value))) +
+  geom_col(aes(y=rate_pay,fill="rate_pay"))+
+  geom_col(aes(y=rate_free,fill="rate_free"))+
+  coord_flip() +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = c("lightblue", "lightcoral"))
+
+p5
