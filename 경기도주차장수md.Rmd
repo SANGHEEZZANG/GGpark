@@ -1,6 +1,7 @@
 ---
 title: "경기도 주차장수"
-output: html_document
+output:
+  github_document: default
 date: "2023-09-01"
 ---
 
