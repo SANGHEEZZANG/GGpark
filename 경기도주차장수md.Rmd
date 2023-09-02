@@ -35,6 +35,7 @@ mytheme <-theme(plot.title=element_text(face="bold.italic",
         panel.grid.minor.y = element_line(color="gray",linetype="dashed"),
         legend.position = "inside")
 
+
 ```
 
 ## 전처리 와 알맞는 변수 생성성
