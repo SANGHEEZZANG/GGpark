@@ -87,7 +87,8 @@ p4 <- df_6 %>%
 
 # 4분할 화면으로 출력
 library(gridExtra)
-grid.arrange(p1,p2,p3,p4,nrow=2, ncol=2)
+grid.arrange(p1,p2,nrow=1, ncol=2)
+grid.arrange(p3,p4,nrow=1, ncol=2)
 
 # 비율 그래프, 유료 주차장이 더 많을때 빨간 그래포가 같이 표시됨
 p5 <- ggplot(df_5, aes(x=reorder(city,value))) +
