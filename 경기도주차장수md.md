@@ -23,6 +23,7 @@ library(dplyr)
 library(ggplot2)
 df_test <- read.csv("ggpark2.csv",fileEncoding = "euc-kr") # pandas에서 내보냈던 데이터셋
 df_test
+
 ```
 
     ##    남부_북부   시군별 X2019_노상.유료. X2019_노상.무료. X2019_노외.공영.
