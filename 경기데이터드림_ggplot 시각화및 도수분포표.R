@@ -69,6 +69,7 @@ p2 <- df_5 %>%
   geom_text(aes(label = pay), hjust = 0, nudge_y=1) +
   labs(x = "경기도 시군별", y = "유료주차장수") +
   mytheme
+  
 
 
 # 경기도 무료 주차장 남부/북부 수의 분포
